@@ -25,3 +25,18 @@ dist-ssr
 
 # Local reference captures
 .reference/
+
+# Local clinical data and Python cache
+.kneura/
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+playwright-report/
+test-results/
+
+# Authorized MRI and local presentation artifacts
+demo_data/knee_mri/*
+!demo_data/knee_mri/README.md
+!demo_data/knee_mri/.gitkeep
+backups/
