@@ -1,0 +1,11 @@
+{
+  "ingestion": "passed",
+  "selection_mode": "existing metadata heuristic; no supplied CSV",
+  "series": [
+    {
+      "image_count": 40,
+      "eligible": true,
+      "five_slice_windows": 36
+    }
+  ]
+}

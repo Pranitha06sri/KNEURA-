@@ -1,0 +1,201 @@
+pyc=E:\Desktop\Hackathon\Technova\KNEURA\backend\__pycache__\app.cpython-314.pyc
+bytes=56810
+magic=2b0e0d0a
+flags=0
+source=E:\Desktop\Hackathon\Technova\KNEURA\backend\app.py
+module_names=
+__doc__
+contextlib
+asynccontextmanager
+contextmanager
+copy
+deepcopy
+hashlib
+json
+logging
+os
+pathlib
+Path
+secrets
+shutil
+sqlite3
+threading
+time
+uuid
+sys
+fastapi
+FastAPI
+Depends
+HTTPException
+Request
+Response
+UploadFile
+File
+BackgroundTasks
+Query
+Form
+fastapi.responses
+FileResponse
+pydantic
+BaseModel
+Field
+relationships
+validate_case_links
+auth
+identity_provider
+password_hash
+audit
+now
+event
+verify
+verify_audit
+inference
+metadata
+analyze
+ingestion
+ingest
+MAX_BYTES
+reporting
+approved_findings
+compose
+edited_statements
+
+narrative
+report_jobs
+getenv
+__file__
+resolve
+parents
+DATA
+RLock
+LOCK
+getLogger
+LOG
+db
+init_db
+save_case
+get_case
+lifespan
+app
+middleware
+request_guard
+user
+radiologist
+public_user
+authorized
+visible
+Login
+post
+login
+get
+me
+logout
+health
+list_cases
+case_detail
+upload
+run_analysis
+start_analysis
+Decision
+decide
+Generate
+generate
+Edit
+patch
+edit
+finalize
+image
+model_info
+validation
+export
+llm_health
+PermittedContext
+NarrativeRequest
+narrative_request_fingerprint
+queue_report
+report_job
+audit_integrity
+AttachEvidence
+attach_evidence
+source_image
+system_readiness
+
+code_objects=
+<module> line=1 args=0 locals=0
+  db line=34 args=0 locals=1
+  init_db line=46 args=0 locals=1
+  save_case line=59 args=1 locals=2
+  get_case line=65 args=1 locals=3
+  lifespan line=73 args=1 locals=5
+  request_guard line=98 args=2 locals=6
+  __annotate__ line=115 args=1 locals=1
+  user line=115 args=1 locals=4
+  radiologist line=125 args=1 locals=1
+  public_user line=131 args=1 locals=2
+  authorized line=135 args=2 locals=3
+  visible line=148 args=2 locals=5
+  Login line=171 args=0 locals=0
+    __annotate__ line=171 args=1 locals=1
+  __annotate__ line=178 args=1 locals=1
+  login line=177 args=3 locals=8
+  me line=201 args=1 locals=1
+  __annotate__ line=207 args=1 locals=1
+  logout line=206 args=2 locals=3
+  health line=213 args=0 locals=0
+  list_cases line=218 args=1 locals=5
+  __annotate__ line=226 args=1 locals=1
+  case_detail line=225 args=2 locals=2
+  __annotate__ line=232 args=1 locals=1
+  upload line=230 args=5 locals=18
+    <genexpr> line=233 args=1 locals=2
+    <genexpr> line=259 args=1 locals=2
+  run_analysis line=272 args=1 locals=4
+  __annotate__ line=294 args=1 locals=1
+  start_analysis line=293 args=3 locals=4
+    <genexpr> line=299 args=1 locals=2
+  Decision line=309 args=0 locals=0
+    __annotate__ line=309 args=1 locals=1
+  __annotate__ line=314 args=1 locals=1
+  decide line=313 args=4 locals=7
+    <genexpr> line=319 args=1 locals=2
+  Generate line=333 args=0 locals=0
+    __annotate__ line=333 args=1 locals=1
+  __annotate__ line=338 args=1 locals=1
+  generate line=337 args=3 locals=11
+  Edit line=367 args=0 locals=0
+    __annotate__ line=367 args=1 locals=1
+  __annotate__ line=373 args=1 locals=1
+  edit line=372 args=3 locals=6
+  __annotate__ line=392 args=1 locals=1
+  finalize line=391 args=2 locals=5
+  __annotate__ line=414 args=1 locals=1
+  image line=413 args=3 locals=8
+    <genexpr> line=419 args=1 locals=2
+  model_info line=428 args=1 locals=2
+  validation line=436 args=1 locals=4
+  __annotate__ line=449 args=1 locals=1
+  export line=447 args=2 locals=4
+  llm_health line=459 args=1 locals=1
+  PermittedContext line=465 args=0 locals=0
+    __annotate__ line=465 args=1 locals=1
+  NarrativeRequest line=472 args=0 locals=0
+    __annotate__ line=472 args=1 locals=1
+  narrative_request_fingerprint line=477 args=1 locals=2
+  __annotate__ line=483 args=1 locals=1
+  queue_report line=482 args=4 locals=11
+  __annotate__ line=517 args=1 locals=1
+  report_job line=516 args=3 locals=4
+  __annotate__ line=525 args=1 locals=1
+  audit_integrity line=524 args=2 locals=2
+  AttachEvidence line=529 args=0 locals=0
+    __annotate__ line=529 args=1 locals=1
+  __annotate__ line=536 args=1 locals=1
+  attach_evidence line=535 args=4 locals=10
+    <genexpr> line=542 args=1 locals=2
+    <genexpr> line=543 args=1 locals=2
+  __annotate__ line=559 args=1 locals=1
+  source_image line=558 args=7 locals=15
+    <genexpr> line=565 args=1 locals=3
+    <genexpr> line=570 args=1 locals=2
+  __annotate__ line=588 args=1 locals=1
+  system_readiness line=587 args=2 locals=3

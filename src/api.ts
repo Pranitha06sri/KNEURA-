@@ -1,12 +1,20 @@
-﻿import { approvedFindingIds } from './workflow'
-import type { Case, ModelMetadata, Report, Role, User, ValidationMetrics } from './types'
+import { approvedFindingIds } from './workflow'
+import type { Case, PatientInformation, ModelMetadata, Report, Role, User, ValidationMetrics } from './types'
 
 const base = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '')
 export const configured = Boolean(base)
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   if (!base) throw new Error('Connect the KNEURA API to access this feature.')
   const response = await fetch(`${base}${path}`, { credentials: 'include', ...options, headers: { ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }), ...options.headers } })
-  if (!response.ok) throw new Error(response.status === 401 ? 'Your session has expired. Please sign in again.' : response.status === 403 ? 'Your account does not have permission for this action.' : `The request could not be completed (${response.status}). Please try again.`)
+  if (!response.ok) {
+    if (path === '/auth/login') {
+      if (response.status === 401) throw new Error('Email, password or workspace role is incorrect.')
+      if (response.status === 429) throw new Error('Too many failed sign-in attempts. Retry after 15 minutes.')
+    }
+    if (path === '/cases' && response.status === 422) throw new Error('Please check the patient name, age (0-120), and gender.')
+    if (path === '/cases' && response.status === 409) throw new Error('This submission was already used. Reopen New case to create another case.')
+    throw new Error(response.status === 401 ? 'Your session has expired. Please sign in again.' : response.status === 403 ? 'Your account does not have permission for this action.' : `The request could not be completed (${response.status}). Please try again.`)
+  }
   if (response.status === 204) return undefined as T
   if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('The API returned an unexpected response. Check the API connection.')
   return response.json() as Promise<T>
@@ -15,6 +23,7 @@ export const api = {
   session: () => request<User>('/auth/me'),
   login: (email: string, password: string, role: Role) => request<User>('/auth/login', { method: 'POST', body: JSON.stringify({ email, password, role }) }),
   logout: () => request<void>('/auth/logout', { method: 'POST' }),
+  createCase: (patient: PatientInformation, key: string) => request<Case>('/cases', { method: 'POST', headers: { 'Idempotency-Key': key }, body: JSON.stringify(patient) }),
   cases: () => request<Case[]>('/cases'),
   case: (id: string) => request<Case>(`/cases/${encodeURIComponent(id)}`),
   decide: (id: string, findingId: string, status: 'APPROVED' | 'REJECTED') => request<Case>(`/cases/${encodeURIComponent(id)}/findings/${encodeURIComponent(findingId)}/decision`, { method: 'POST', body: JSON.stringify({ status }) }),
@@ -24,12 +33,19 @@ export const api = {
   finalize: (id: string) => request<Case>(`/cases/${encodeURIComponent(id)}/report/finalize`, { method: 'POST' }),
   model: () => request<ModelMetadata>('/model'),
   validation: () => request<ValidationMetrics>('/validation'),
+  llmHealth: () => request<Record<string, unknown>>('/system/llm/health'),
+  readiness: (executeModel = false) => request<Record<string, unknown>>(`/system/readiness?execute_model=${executeModel}`),
+  reportJob: (caseId: string, body: unknown) => request<{ job_id: string; status: string }>(`/cases/${encodeURIComponent(caseId)}/report-jobs`, { method: 'POST', body: JSON.stringify(body) }),
+  reportJobStatus: (caseId: string, jobId: string) => request<Record<string, unknown>>(`/cases/${encodeURIComponent(caseId)}/report-jobs/${encodeURIComponent(jobId)}`),
+  auditVerify: (caseId: string) => request<Record<string, unknown>>(`/v1/audit/${encodeURIComponent(caseId)}/verify`),
+  integrationResult: (caseId: string) => request<Case>(`/integration/cases/${encodeURIComponent(caseId)}/result`),
+  sourceImageUrl: (caseId: string, imageId: string, params = '') => `${base || ''}/cases/${encodeURIComponent(caseId)}/source-images/${encodeURIComponent(imageId)}${params}`,
 }
-export function uploadStudy(files: File[], onProgress: (value: number) => void): Promise<Case> {
+export function uploadStudy(caseId: string, files: File[], onProgress: (value: number) => void): Promise<Case> {
   return new Promise((resolve, reject) => {
     if (!base) return reject(new Error('Connect the KNEURA API before uploading a study.'))
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', `${base}/cases`)
+    xhr.open('POST', `${base}/cases/${encodeURIComponent(caseId)}/study`)
     xhr.withCredentials = true
     const data = new FormData()
     files.forEach(file => data.append('files', file))

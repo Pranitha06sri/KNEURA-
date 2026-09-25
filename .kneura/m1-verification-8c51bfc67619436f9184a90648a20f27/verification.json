@@ -1,0 +1,457 @@
+{
+  "status": "PASS: technical inference and existing Grad-CAM",
+  "source": "E:\\Desktop\\Hackathon\\Technova\\KNEURA\\.kneura\\package-validation\\5930e8da615047d898765d3f0df3e3a0\\dicom",
+  "dicom_count": 40,
+  "provenance": "PROVENANCE VERIFICATION REQUIRED",
+  "metadata_issues": [
+    "BurnedInAnnotation must be NO; human pixel review still required",
+    "DeidentificationMethod is missing",
+    "PatientIdentityRemoved must be YES"
+  ],
+  "checkpoint": "E:\\Desktop\\Hackathon\\Technova\\KNEURA\\.kneura\\checkpoints\\knee-ai-08b8ade87b11ef2c.pt",
+  "analysis": {
+    "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+    "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+    "seriesEvaluated": 1,
+    "windowsEvaluated": 36,
+    "aggregation": "mean_probability_across_study_windows",
+    "modelVersion": "KNEE-AI 3.3",
+    "checkpointSha256": "66504783a2ad62d852767db58aa8fde802d6bd71171cd9836d8cdfba66e21611"
+  },
+  "series": [
+    {
+      "uid": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+      "selected": true,
+      "reason": "DICOM description heuristic; confirm against acquisition metadata",
+      "instances": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ]
+    }
+  ],
+  "csv_status": "Authoritative per-series CSV missing; existing metadata heuristic used for technical testing only.",
+  "target_layer": "model.backbone.features[-1]",
+  "target_layer_type": "Conv2dNormActivation",
+  "frozen_hashes": {
+    "knee_ai_inference.py": "4a86a64aba740089f03c2a169c89d8f612731bd43e45591963532e191d27a677",
+    "backend\\inference.py": "0612cab0d52855f1d70273c70d9a559054bdf4b9b27ffa49fb1214f93377e95e"
+  },
+  "findings": [
+    {
+      "finding": "ACL",
+      "probability": 0.031816743314266205,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-0",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 0,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 24,
+        "sliceStart": 24,
+        "sliceEnd": 28,
+        "instanceNumbers": [
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/1075a6fa375841b8813d58e1a076c2dd.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-0.png",
+        "windowProbability": 0.10937823355197906,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "MCL",
+      "probability": 0.09912993758916855,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-1",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 1,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 27,
+        "sliceStart": 27,
+        "sliceEnd": 31,
+        "instanceNumbers": [
+          27,
+          28,
+          29,
+          30,
+          31
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/500cf89bd295467ea5c8c8d5b4d06656.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-1.png",
+        "windowProbability": 0.32169073820114136,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Medial Meniscus",
+      "probability": 0.9833698272705078,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-2",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 2,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 9,
+        "sliceStart": 9,
+        "sliceEnd": 13,
+        "instanceNumbers": [
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/e48dcb4a6c8b48d3afa7e1240c27c284.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-2.png",
+        "windowProbability": 0.9957894682884216,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Lateral Meniscus",
+      "probability": 0.9468550086021423,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-3",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 3,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 7,
+        "sliceStart": 7,
+        "sliceEnd": 11,
+        "instanceNumbers": [
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/86d9e62f6e144e17bdf02f360e2f4b8d.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-3.png",
+        "windowProbability": 0.9967588782310486,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Medial OA",
+      "probability": 0.9909477233886719,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-4",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 4,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 2,
+        "sliceStart": 2,
+        "sliceEnd": 6,
+        "instanceNumbers": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/9b847831b63b46a5a2feb615408dfa4d.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-4.png",
+        "windowProbability": 0.999584972858429,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Lateral OA",
+      "probability": 0.41309744119644165,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-5",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 5,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 1,
+        "sliceStart": 1,
+        "sliceEnd": 5,
+        "instanceNumbers": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/4e126a22ecbd4fe99f9a2a4607016581.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-5.png",
+        "windowProbability": 0.872234582901001,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0001060635331668891,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Patellofemoral OA",
+      "probability": 0.9646025896072388,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-6",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 6,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 1,
+        "sliceStart": 1,
+        "sliceEnd": 5,
+        "instanceNumbers": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/4e126a22ecbd4fe99f9a2a4607016581.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-6.png",
+        "windowProbability": 0.9972032308578491,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Effusion",
+      "probability": 0.3293517231941223,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-7",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 7,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 23,
+        "sliceStart": 23,
+        "sliceEnd": 27,
+        "instanceNumbers": [
+          23,
+          24,
+          25,
+          26,
+          27
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/70cbe9cdcacb4ecda49c4b5798ca4c81.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-7.png",
+        "windowProbability": 0.575994610786438,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Synovitis",
+      "probability": 0.19693315029144287,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-8",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 8,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 36,
+        "sliceStart": 36,
+        "sliceEnd": 40,
+        "instanceNumbers": [
+          36,
+          37,
+          38,
+          39,
+          40
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/efbb041790ca4f53a6ed5ac1a38097ea.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-8.png",
+        "windowProbability": 0.6607219576835632,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Baker's cyst",
+      "probability": 0.7059594392776489,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-9",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 9,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 4,
+        "sliceStart": 4,
+        "sliceEnd": 8,
+        "instanceNumbers": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/0738cabe780f4747bd7093767fe34b7a.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-9.png",
+        "windowProbability": 0.943868100643158,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.008277557790279388,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Contusion",
+      "probability": 0.049167484045028687,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-10",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 10,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 24,
+        "sliceStart": 24,
+        "sliceEnd": 28,
+        "instanceNumbers": [
+          24,
+          25,
+          26,
+          27,
+          28
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/1075a6fa375841b8813d58e1a076c2dd.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-10.png",
+        "windowProbability": 0.21149523556232452,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0,
+      "heatmap_max": 1.0
+    },
+    {
+      "finding": "Fracture",
+      "probability": 0.815100371837616,
+      "evidence": {
+        "id": "f2b1909e7f4945d8b7b6c54a3c9bd4c9-finding-11",
+        "analysisId": "f2b1909e7f4945d8b7b6c54a3c9bd4c9",
+        "classIndex": 11,
+        "generatedAt": "2026-09-24T12:53:51.367240+00:00",
+        "modelVersion": "KNEE-AI 3.3",
+        "seriesId": "1.2.826.0.1.3680043.8.498.43694888338048703729850099846765930063",
+        "seriesName": "AX T2 FS",
+        "windowNumber": 28,
+        "sliceStart": 28,
+        "sliceEnd": 32,
+        "instanceNumbers": [
+          28,
+          29,
+          30,
+          31,
+          32
+        ],
+        "mriImageUrl": "/api/cases/VERIFY-M1/images/d1b419fd594647c096c0ab9fa88ce3ca.png",
+        "gradCamImageUrl": "/api/cases/VERIFY-M1/images/finding-11.png",
+        "windowProbability": 0.941338062286377,
+        "attribution": "Class-specific five-slice Grad-CAM overlaid on the first slice; not slice-localized evidence."
+      },
+      "tensor_identical": true,
+      "probabilities_unchanged": true,
+      "heatmap_min": 0.0024409948382526636,
+      "heatmap_max": 1.0
+    }
+  ],
+  "all_rejected_check": {
+    "approved_input": [],
+    "template_text": "No AI-proposed abnormalities were approved. This does not establish a normal examination.",
+    "unsupported_narrative_rejected": true,
+    "live_llm_called": false
+  }
+}
