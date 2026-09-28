@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'report_jobs.cpython-314.pyc')
-=======
 """Persisted report job orchestration using FastAPI's existing background worker.
 
 Only short read/commit sections hold the workflow lock. Network work never does.
@@ -55,4 +51,3 @@ def run(service, case_id, job_id, payload, account):
             job.update(status='FAILED', updatedAt=now(), error='Narrative generation failed. Check LLM availability and output validation, then retry. No draft was saved.')
             event(case, 'LLM narrative job failed; approved findings preserved', account['name'], actor_id=account['id'], object_id=job_id, current='FAILED')
             service.save_case(case)
->>>>>>> Stashed changes

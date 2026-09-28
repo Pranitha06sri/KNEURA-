@@ -8,32 +8,24 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-<<<<<<< Updated upstream
-    "test": "node --test tests/*.test.mjs",
-    "test:e2e": "node tests/patient.e2e.mjs"
-=======
-    "api": "python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000",
     "test": "node --test --test-isolation=none tests/workflow.test.mjs",
+    "test:e2e": "playwright test",
+    "test:patient": "node tests/patient.e2e.mjs",
+    "api": "powershell -NoProfile -File ./run_kneura.ps1",
     "test:backend": "python -m pytest tests/test_backend.py -q",
     "model:check": "python -m backend.manage check-model",
-    "test:e2e": "playwright test",
     "test:live": "playwright test --config playwright.live.config.ts",
     "demo:dicom": "python -m backend.demo",
     "preflight": "python scripts/preflight.py --model",
     "demo:verify": "python scripts/verify_dicom_study.py",
     "demo:start": "powershell -NoProfile -File scripts/start-finals.ps1"
->>>>>>> Stashed changes
   },
   "dependencies": {
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-<<<<<<< Updated upstream
-    "@playwright/test": "1.63.0",
-=======
     "@playwright/test": "^1.63.0",
->>>>>>> Stashed changes
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

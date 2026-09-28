@@ -1,4 +1,4 @@
-﻿"""Workflow/authorization tests and real supplied-checkpoint integration test.
+"""Workflow/authorization tests and real supplied-checkpoint integration test.
 All DICOM input generated here is synthetic and never clinical validation.
 """
 import io
@@ -105,6 +105,9 @@ def test_review_report_and_release_gates(client):
     assert 'revisions' not in exported['report']
     assert 'MVP demonstration' in exported['integration_mode']
     assert client.patch(route + '/report', json={'findings': 'change', 'impression': 'change'}).status_code == 409
+    login(client, 'orthopedist')
+    release = client.post(route + '/release-to-patient')
+    assert release.status_code == 200
     login(client, 'patient')
     patient = client.get(route).json()
     assert len(patient['findings']) == 1 and 'probability' not in patient['findings'][0]
@@ -114,11 +117,57 @@ def test_review_report_and_release_gates(client):
     login(client, 'otherpatient')
     assert client.get(route).status_code == 404 and client.get('/api/cases').json() == []
     login(client, 'orthopedist')
-    assert client.get(route).status_code == 404
-    with service.db() as conn:
-        conn.execute('INSERT INTO grants VALUES (?,?)', ('KN-TEST', 'orthopedist'))
     assert client.get(route).status_code == 200
     assert client.post(route + '/report/finalize').status_code == 403
+
+
+@pytest.mark.parametrize('case_status,report_status', [('AI_READY', None), ('DRAFT', 'UNDER_REVIEW'), ('FINAL', 'UNDER_REVIEW'), ('DRAFT', 'FINAL')])
+def test_handoff_requires_both_final_states(client, case_status, report_status):
+    case = seeded_case(case_status)
+    if report_status:
+        case['report'] = dict(status=report_status, approvedFindingIds=[], statements=[])
+    service.save_case(case)
+    login(client, 'orthopedist')
+    assert client.get('/api/cases').json() == []
+    assert client.get('/api/cases/KN-TEST').status_code == 404
+    assert client.get('/api/cases/KN-TEST/export').status_code == 404
+    assert client.post('/api/cases/KN-TEST/release-to-patient').status_code == 409
+    assert not service.get_case('KN-TEST').get('releasedToPatient')
+
+
+def test_handoff_release_persistence_and_identity(client):
+    case = seeded_case('FINAL')
+    case['report'] = dict(status='FINAL', approvedFindingIds=[], statements=[])
+    service.save_case(case)
+    route = '/api/cases/KN-TEST'
+    for role in ('radiologist', 'patient', 'otherpatient'):
+        login(client, role)
+        assert client.post(route + '/release-to-patient').status_code == 403
+    login(client, 'patient')
+    assert client.get('/api/cases').json() == []
+    assert client.get(route).status_code == 404
+    login(client, 'orthopedist')
+    assert [c['id'] for c in client.get('/api/cases').json()] == ['KN-TEST']
+    assert client.get(route).status_code == 200
+    released = client.post(route + '/release-to-patient')
+    assert released.status_code == 200
+    stored = service.get_case('KN-TEST')
+    assert stored['releasedToPatient'] is True
+    assert stored['releasedToPatientById'] == 'orthopedist'
+    assert stored['releasedToPatientAt']
+    assert stored['report'] == case['report']
+    assert stored['findings'] == case['findings']
+    assert stored['study'] == case['study']
+    assert len(stored['audit']) == 1
+    assert client.post(route + '/release-to-patient').status_code == 409
+    assert len(service.get_case('KN-TEST')['audit']) == 1
+    for role in ('patient', 'otherpatient', 'orthopedist', 'radiologist', 'patient'):
+        assert client.post('/api/auth/logout').status_code == 204
+        login(client, role)
+        allowed = role != 'otherpatient'
+        assert client.get(route).status_code == (200 if allowed else 404)
+        assert client.get(route + '/export').status_code == (200 if allowed else 404)
+        assert len(client.get('/api/cases').json()) == int(allowed)
 
 
 def test_duplicate_canonical_and_all_rejected(client):
@@ -275,8 +324,8 @@ def test_failed_access_logged_and_login_rotates_session(client):
 
 def narrative_result(payload):
     ids = [f['id'] for f in payload['approved_findings']]
-    findings = 'The reviewing radiologist has verified abnormalities involving ' + ', '.join(f['name'] for f in payload['approved_findings']) + '.'
-    impression = 'Verified knee abnormalities as described. Radiologist review is required before final approval.'
+    findings = 'Abnormalities involve ' + ', '.join(f['name'] for f in payload['approved_findings']) + '.'
+    impression = 'Knee abnormalities as described.'
     return dict(report_type='DRAFT', findings=findings, impression=impression, source_finding_ids=ids,
         statements=[dict(text=findings, section='findings', finding_ids=ids), dict(text=impression, section='impression', finding_ids=ids)])
 
@@ -558,3 +607,26 @@ def test_upload_patient_details_persist(client):
     assert case['study']['patientId'] == 'SYNTHETIC-TEST'
     for invalid in ({**fields, 'patient_age': '-1'}, {**fields, 'patient_name': '  '}, {**fields, 'patient_gender': 'invalid'}):
         assert client.post('/api/cases', files=[('files', ('image.dcm', data))], data=invalid).status_code == 422
+
+
+@pytest.mark.parametrize('age', [0, 42])
+def test_uploaded_demographics_persist_with_dicom_identity(client, age):
+    login(client)
+    study, series = generate_uid(), generate_uid()
+    response = client.post('/api/cases', data={
+        'patient_name': '  Entered patient  ', 'patient_age': str(age), 'patient_gender': 'Female',
+    }, files=[('files', ('study.dcm', dicom_bytes(study, series, 1)))])
+    assert response.status_code == 200, response.text
+    created = response.json()
+    route = '/api/cases/' + created['id']
+    assert created['study']['patientName'] == 'Entered patient'
+    assert created['study']['patientId'] == 'SYNTHETIC-TEST'
+    assert created['patient']['name'] == 'Entered patient'
+    assert created['patient']['age'] == age
+    assert created['patient']['gender'] == 'Female'
+    assert created['patient']['patient_id'] == 'SYNTHETIC-TEST'
+    assert service.get_case(created['id'])['patient'] == created['patient']
+    client.post('/api/auth/logout')
+    login(client)
+    assert client.get(route).json()['patient'] == created['patient']
+    assert client.get('/api/cases').json()[0]['patient'] == created['patient']

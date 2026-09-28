@@ -1,16 +1,12 @@
-<<<<<<< Updated upstream
-"""Source-resolution DICOM display helpers."""
-=======
 """Source-resolution display pipeline, independent of frozen model preprocessing."""
->>>>>>> Stashed changes
+
 import io
 import numpy as np
 from PIL import Image
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
+
+
 def pixel_data(path):
     import pydicom
     ds = pydicom.dcmread(path)
@@ -18,16 +14,12 @@ def pixel_data(path):
     if pixels.ndim != 2 or not np.isfinite(pixels).all():
         raise ValueError('Viewer requires a finite, single-frame grayscale image.')
     pixels = pixels * float(getattr(ds, 'RescaleSlope', 1)) + float(getattr(ds, 'RescaleIntercept', 0))
-<<<<<<< Updated upstream
     if not np.isfinite(pixels).all():
         raise ValueError('DICOM rescale produced invalid pixel values.')
     return ds, pixels
 
-=======
-    return ds, pixels
 
 
->>>>>>> Stashed changes
 def display_metadata(path):
     ds, pixels = pixel_data(path)
     low, high = np.percentile(pixels, [1, 99])
@@ -39,19 +31,17 @@ def display_metadata(path):
         width, center = max(1, float(high-low)), float((high+low)/2)
     return dict(width=int(ds.Columns), height=int(ds.Rows), windowWidth=width, windowCenter=center)
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
+
+
 def render(path, width=None, center=None, cam_path=None, opacity=.45):
     ds, pixels = pixel_data(path)
     meta = display_metadata(path) if width is None or center is None else None
     width = width if width is not None else meta['windowWidth']
     center = center if center is not None else meta['windowCenter']
-<<<<<<< Updated upstream
-=======
+
     # DICOM linear window, including width=1 threshold behavior.
->>>>>>> Stashed changes
+
     gray = (pixels > center - .5).astype(np.float32) if width <= 1 else np.clip((pixels-(center-.5))/(width-1)+.5, 0, 1)
     if str(getattr(ds, 'PhotometricInterpretation', '')) == 'MONOCHROME1':
         gray = 1-gray

@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'relationships.cpython-314.pyc')
-=======
 """Validate links before atomically persisting a case document in SQLite.
 
 Study, series, images, analyses, evidence, decisions and report revisions are
@@ -43,4 +39,3 @@ def validate_case_links(case):
                 raise ValueError('Report statements may only reference approved findings.')
     if any(a.get('caseId', case['id']) != case['id'] for a in case['audit']):
         raise ValueError('Audit events must belong to their case.')
->>>>>>> Stashed changes

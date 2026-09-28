@@ -1,6 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $workspace = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 Set-Location -LiteralPath $workspace
+& (Join-Path $workspace 'run_kneura.ps1') -LoadOnly
 foreach ($port in @(8000,5173)) {
     if (Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue) {
         throw "Port $port is already in use. Use the existing service or stop it explicitly before starting another."

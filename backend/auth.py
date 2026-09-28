@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'auth.cpython-314.pyc')
-=======
 """Replaceable local identity provider; authorization remains in the API.
 
 A hospital SSO adapter must return a server-verified account with the same
@@ -37,4 +33,3 @@ class LocalIdentityProvider:
 
 
 identity_provider: IdentityProvider = LocalIdentityProvider()
->>>>>>> Stashed changes

@@ -1,1 +1,1 @@
-﻿"""KNEURA backend package."""
+"""KNEURA backend package."""

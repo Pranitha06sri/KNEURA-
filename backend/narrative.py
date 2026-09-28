@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'narrative.cpython-314.pyc')
-=======
 """Actual narrative LLM adapter. No template substitution on provider failure."""
 import json
 import os
@@ -39,7 +35,15 @@ measurements, severity, symptoms, history, diagnosis, normal structures or certa
 Only the supplied approved class-level abnormalities are established. Do not turn
 an approved ligament or meniscus abnormality into a tear, grade or rupture.
 Clinical context is context, not additional imaging evidence. No treatment advice.
+Use concise, natural clinical prose, organized by anatomy. Do not describe AI,
+probabilities, Grad-CAM, approval/rejection, radiologists, workflow states, backend
+IDs or implementation details in findings, impression or statement text. IDs belong
+only in the structured source fields. Do not repeat template approval wording.
+An abnormality label alone does not establish location, fiber discontinuity,
+retraction, marrow edema, associated injury or chronicity. Do not add those details.
 If no findings are approved, explicitly state this does not establish a normal examination.
+In that case, describe the lack of reportable supplied findings without naming any
+abnormality or discussing the approval workflow.
 Write coherent professional Findings and Impression prose. Authorized radiologist
 review and final approval are required. Return JSON only with these exact keys:
 report_type ("DRAFT"), findings (string), impression (string), source_finding_ids
@@ -57,7 +61,7 @@ def configuration():
     parsed = urllib.parse.urlparse(url)
     valid_url = parsed.scheme in ('http', 'https') and bool(parsed.netloc) and not parsed.username and not parsed.password
     return dict(url=url, model=model, provider=provider, configured=bool(valid_url and model),
-                key=os.getenv('KNEURA_LLM_KEY', os.getenv('LLM_API_KEY', '')),
+                key=os.getenv('KNEURA_LLM_KEY', os.getenv('KNEURA_LLM_API_KEY', os.getenv('LLM_API_KEY', ''))),
                 timeout=max(1, min(120, int(os.getenv('LLM_TIMEOUT_SECONDS', '30')))),
                 retries=max(0, min(3, int(os.getenv('LLM_MAX_RETRIES', '2')))))
 
@@ -137,14 +141,21 @@ def validate_output(raw, payload):
     if used != ids:
         raise ValueError('Every approved finding requires a statement source.')
     for section in ('findings', 'impression'):
-        if '\n'.join(s.text for s in result.statements if s.section == section) != getattr(result, section):
+        statement_text = ' '.join(s.text for s in result.statements if s.section == section)
+        # Providers may format the same sentences as a paragraph or separate lines.
+        # Compare every word in order; only whitespace may differ.
+        if statement_text.split() != getattr(result, section).split():
             raise ValueError('Narrative and traceable statements disagree.')
+        # Keep the existing line-based editor's source links intact on save.
+        setattr(result, section, '\n'.join(s.text for s in result.statements if s.section == section))
     text = result.findings + '\n' + result.impression
     for name in NAMES:
         if name not in names and re.search(ALIASES[name], text, re.I):
             raise ValueError('Provider introduced an unapproved abnormality.')
-    if re.search(r'\b(tear|rupture|grade|severe|moderate|mild|complete|partial|mm|cm)\b', text, re.I):
+    if re.search(r'\b(tear|rupture|grade|severe|moderate|mild|complete|partial|mm|cm|retraction|discontinuity|edema|oedema|acute|chronic)\b', text, re.I):
         raise ValueError('Provider introduced unsupported severity, measurements or subtype.')
+    if re.search(r'\b(AI|Grad[ -]?CAM|probabilit\w*|radiologist\w*|approv\w*|reject\w*|workflow|backend|DRAFT|FINAL)\b', text, re.I):
+        raise ValueError('Provider included internal workflow language in clinical prose.')
     # Numeric claims are not present in approved class labels. Context age is the only allowed number.
     allowed_numbers = set(re.findall(r'\d+(?:\.\d+)?', str(payload['clinical_context'].get('age', ''))))
     if not set(re.findall(r'\d+(?:\.\d+)?', text)).issubset(allowed_numbers):
@@ -168,4 +179,3 @@ def generate(payload):
             if attempt == config['retries']:
                 raise ValueError('LLM unavailable after bounded retries. Approved findings are preserved.') from exc
             time.sleep(min(2, attempt + 1))
->>>>>>> Stashed changes

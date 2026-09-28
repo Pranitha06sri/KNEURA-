@@ -28,10 +28,10 @@ if sample:
         raise ValueError('Sample must contain exactly one patient.')
     patient_id = ids.pop()
 with service.db() as conn:
-    for role in ('radiologist', 'orthopedist', 'patient'):
+    for role in ('radiologist', 'orthopedist', 'patient', 'otherpatient'):
         salt = secrets.token_hex(16)
         conn.execute('INSERT INTO users VALUES (?,?,?,?,?,?,?)', (role, role + '@demo.test', 'DEMO ' + role,
-            role, salt, service.password_hash(os.environ['KNEURA_LIVE_PASSWORD'], salt), patient_id if role == 'patient' else ''))
+            'patient' if role == 'otherpatient' else role, salt, service.password_hash(os.environ['KNEURA_LIVE_PASSWORD'], salt), patient_id if role == 'patient' else 'OTHER-PATIENT' if role == 'otherpatient' else ''))
 if sample:
     shutil.copyfile(sample, root / 'demo.zip')
 else:

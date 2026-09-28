@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'reporting.cpython-314.pyc')
-=======
-﻿"""Explicit template fallback and report provenance. Narrative LLM is in narrative.py."""
+"""Explicit template fallback and report provenance. Narrative LLM is in narrative.py."""
 
 from .inference import NAMES
 
@@ -43,4 +39,3 @@ def edited_statements(findings, impression, approved, previous):
                                source=old['source'] if old else 'radiologist-authored',
                                **({key: old[key] for key in ('evidenceIds', 'attachedById', 'attachedBy', 'attachedAt') if key in old} if old else {})))
     return result
->>>>>>> Stashed changes

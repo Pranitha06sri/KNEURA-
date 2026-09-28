@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'ingestion.cpython-314.pyc')
-=======
-﻿"""Validated single-study DICOM ingestion; filenames never become storage paths."""
+"""Validated single-study DICOM ingestion; filenames never become storage paths."""
 import os
 import hashlib
 import csv
@@ -132,4 +128,3 @@ def ingest(payloads, case_id, directory):
                 demonstration=str(getattr(first, 'ClinicalTrialProtocolName', '')) == 'KNEURA-SYNTHETIC-DEMO',
                 date=f'{date[:4]}-{date[4:6]}-{date[6:8]}' if len(date) == 8 else '',
                 laterality=str(getattr(first, 'ImageLaterality', getattr(first, 'Laterality', '')))), list(series.values())
->>>>>>> Stashed changes

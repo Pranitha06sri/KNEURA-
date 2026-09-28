@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'audit.cpython-314.pyc')
-=======
 """Append-only events inside the persisted case aggregate."""
 from datetime import datetime, timezone
 from copy import deepcopy
@@ -53,4 +49,3 @@ def event(case, action, actor, *, actor_id=None, object_id=None, previous=None, 
     entry['hash'] = digest(entry)
     case['audit'].append(entry)
     case['auditChain']['head'] = entry['hash']
->>>>>>> Stashed changes

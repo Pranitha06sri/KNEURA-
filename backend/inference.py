@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'inference.cpython-314.pyc')
-=======
 """Adapter around the supplied, unchanged KNEE-AI 3.3 inference pipeline."""
 import hashlib
 import os
@@ -145,4 +141,3 @@ def patient_explanation(name):
         'Fracture': 'a break or crack in a bone',
     }
     return f"Your radiologist approved a finding involving {descriptions[name]}. Your care team can explain what the finalized report means for you."
->>>>>>> Stashed changes

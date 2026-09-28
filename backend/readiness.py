@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'readiness.cpython-314.pyc')
-=======
 """Presentation checks with explicit failures, no secret values in responses."""
 import os
 from pathlib import Path
@@ -43,4 +39,3 @@ def check(service, full_model=False):
     result['configuration'] = dict(csv_required=os.getenv('KNEURA_REQUIRE_SERIES_CSV') == '1', secure_cookie=os.getenv('KNEURA_SECURE_COOKIE') == '1')
     result['finals_ready'] = all((result['database'], result['model'], result['worker'], result['llm']['reachable'], result['demo_mri']['ready'], result['configuration']['csv_required']))
     return result
->>>>>>> Stashed changes

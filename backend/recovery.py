@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'recovery.cpython-314.pyc')
-=======
 """Offline, verified database + imaging backups. Restore never overwrites storage."""
 from contextlib import closing
 import argparse
@@ -87,4 +83,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
     result = backup(args.source, args.output) if args.command == 'backup' else restore(args.archive, args.destination)
     print(json.dumps(result, indent=2))
->>>>>>> Stashed changes

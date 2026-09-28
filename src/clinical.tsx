@@ -49,12 +49,17 @@ export function EvidenceCard({ item, finding, role, onOpen }: { item: Case; find
   </section>
 }
 
+export function PatientIdentity({ item }: { item: Case }) {
+  const patient = item.patient
+  return <span className="patient-identity"><strong>{patient?.name || item.study.patientName || 'Patient name unavailable'}</strong><small>{patient?.age != null ? `${patient.age} years` : 'Age not supplied'} / {patient?.gender || patient?.sex || 'Gender not supplied'}</small></span>
+}
+
 export function PatientStudyDetails({ item, role }: { item: Case; role: Role }) {
   const patient = item.patient
   const context = item.clinical_context || patient?.clinical_context
   return <details className="study-details"><summary>Patient & study information</summary>
     <dl className="evidence-metadata">
-      <div><dt>Patient</dt><dd>{item.study.patientName || 'Unavailable'}</dd></div>
+      <div><dt>Patient</dt><dd>{patient?.name || item.study.patientName || 'Unavailable'}</dd></div>
       <div><dt>Display ID</dt><dd>{patient?.display_id || 'Unavailable'}</dd></div>
       <div><dt>Age</dt><dd>{patient?.age != null ? `${patient.age} years` : 'Not supplied'}</dd></div>
       <div><dt>{patient?.gender ? 'Gender' : 'Sex'}</dt><dd>{patient?.gender || patient?.sex || 'Not supplied'}</dd></div>
@@ -81,9 +86,11 @@ export function NoApprovedFindings() {
 
 export function FinalizedSummary({ item, role, onReport }: { item: Case; role: Role; onReport: () => void }) {
   if (item.status !== 'FINAL' || item.report?.status !== 'FINAL') return null
-  return <section className="finalized-summary" aria-label="Finalized case summary"><div><span className="eyebrow">FINAL REPORT / RADIOLOGIST VERIFIED</span><h2>Review complete</h2><p>{item.report.approvedBy || 'Approving radiologist unavailable'}{item.report.approvedAt ? ` · ${new Date(item.report.approvedAt).toLocaleString()}` : ''}</p></div><div className="finalized-counts">
+  return <section className="finalized-summary" aria-label="Finalized case summary"><div><span className="eyebrow">FINAL REPORT / RADIOLOGIST VERIFIED</span><h2>{role === 'orthopedist' && !item.releasedToPatient ? 'Awaiting your approval' : 'Review complete'}</h2><p>{item.report.approvedBy || 'Approving radiologist unavailable'}{item.report.approvedAt ? ` · ${new Date(item.report.approvedAt).toLocaleString()}` : ''}</p></div><div className="finalized-counts">
     {role === 'radiologist' && <span><strong>{item.findings.length}</strong> AI-proposed findings</span>}
     <span><strong>{item.findings.filter(f => f.status === 'APPROVED').length}</strong> Radiologist-approved</span>
     {role === 'radiologist' && <span><strong>{item.findings.filter(f => f.status === 'REJECTED').length}</strong> Rejected / excluded from report</span>}
-  </div><button className="button" onClick={onReport}>View final report</button></section>
+  </div><button className="button" onClick={onReport}>View final report</button>
+  {item.releasedToPatient && <span className="small-tag" style={{marginLeft: 'auto'}}>RELEASED TO PATIENT</span>}
+  </section>
 }

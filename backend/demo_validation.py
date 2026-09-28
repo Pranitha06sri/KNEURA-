@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'demo_validation.cpython-314.pyc')
-=======
 """Demo metadata checks, not a substitute for authorized human de-identification review."""
 import hashlib
 import json
@@ -86,4 +82,3 @@ def verify_study(directory, csv_path, authorization_path=None):
     result['problems'] = list(dict.fromkeys(result['problems']))
     result['ready'] = not result['problems']
     return result
->>>>>>> Stashed changes

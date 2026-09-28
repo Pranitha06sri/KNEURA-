@@ -1,18 +1,3 @@
-<<<<<<< Updated upstream
-"""Recovered KNEURA backend source bridge.
-
-The original Python 3.14 source was unavailable. This bridge executes the
-unchanged, hash-verified compiled module from backend/__pycache__ so its route
-and workflow behavior is restored without rewriting or modifying the bytecode.
-"""
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'app.cpython-314.pyc')
-
-# Extend the recovered application without modifying its protected bytecode.
-import sys as _sys
-from .patient_cases import install as _install_patient_cases
-_install_patient_cases(_sys.modules[__name__])
-=======
 """Local Technova MVP API. Run: python -m uvicorn backend.app:app --port 8000."""
 from contextlib import asynccontextmanager, contextmanager
 from copy import deepcopy
@@ -152,12 +137,11 @@ def authorized(case, account):
         return True
     if case['status'] != 'FINAL' or case.get('report', {}).get('status') != 'FINAL':
         return False
+    if account['role'] == 'orthopedist':
+        return True
     if account['role'] == 'patient':
-        return bool(account['patient_id']) and account['patient_id'] == case['study']['patientId']
-    if account['role'] != 'orthopedist':
-        return False
-    with db() as conn:
-        return conn.execute('SELECT 1 FROM grants WHERE case_id=? AND user_id=?', (case['id'], account['id'])).fetchone() is not None
+        return bool(case.get('releasedToPatient')) and bool(account['patient_id']) and account['patient_id'] == case['study']['patientId']
+    return False
 
 
 def visible(case, account):
@@ -422,7 +406,7 @@ def finalize(case_id: str, account=Depends(radiologist)):
         case['status'] = 'FINAL'
         event(case, 'Final report approved and released to authorized clinical users', account['name'], actor_id=account['id'], object_id=report['id'], previous='UNDER_REVIEW', current='FINAL')
         save_case(case)
-        return case
+        return visible(get_case(case_id), account)
 
 
 @app.get('/api/cases/{case_id}/images/{filename}')
@@ -599,8 +583,26 @@ def source_image(case_id: str, image_id: str, width: float | None = Query(defaul
         raise HTTPException(422, 'Source DICOM pixels could not be rendered.') from exc
 
 
+@app.post('/api/cases/{case_id}/release-to-patient')
+def release_to_patient(case_id: str, account=Depends(user)):
+    if account['role'] != 'orthopedist':
+        raise HTTPException(403, 'Only an orthopedist can release a case to a patient.')
+    with LOCK:
+        case = get_case(case_id)
+        if case['status'] != 'FINAL' or case.get('report', {}).get('status') != 'FINAL':
+            raise HTTPException(409, 'Case must be finalized by a radiologist first.')
+        if case.get('releasedToPatient'):
+            raise HTTPException(409, 'Case is already released to the patient.')
+        case['releasedToPatient'] = True
+        case['releasedToPatientAt'] = now()
+        case['releasedToPatientBy'] = account['name']
+        case['releasedToPatientById'] = account['id']
+        event(case, 'Case approved and released to patient', account['name'], actor_id=account['id'], current='RELEASED_TO_PATIENT')
+        save_case(case)
+        return visible(case, account)
+
+
 @app.get('/api/system/readiness')
 def system_readiness(execute_model: bool = False, account=Depends(radiologist)):
     from .readiness import check
     return check(sys.modules[__name__], execute_model)
->>>>>>> Stashed changes

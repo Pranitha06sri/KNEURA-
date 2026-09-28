@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-from ._pyc_loader import load_compiled
-load_compiled(__name__, 'demo.cpython-314.pyc')
-=======
 """Generate explicitly synthetic DICOM input, never precomputed AI results.
 
 Run python -m backend.demo --output .kneura/demo-study.zip, then upload in UI.
@@ -52,4 +48,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(create_demo_package(args.output))
     print('DEMO ONLY: artificial noise, not patient MRI. Upload and run the real model; outputs have no clinical meaning.')
->>>>>>> Stashed changes
